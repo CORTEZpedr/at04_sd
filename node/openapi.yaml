@@ -1,0 +1,93 @@
+openapi: 3.1.0
+info:
+  title: API de Cachorros
+  version: 1.0.0
+  description: API para obter informações sobre cachorros e gerenciar favoritos
+
+servers:
+  - url: http://localhost:8080
+    description: Servidor de desenvolvimento
+
+paths:
+  /dogs:
+    get:
+      summary: Obtém informações sobre cachorros
+      parameters:
+        - name: format
+          in: query
+          description: Formato dos dados de resposta (JSON ou XML)
+          schema:
+            type: string
+            enum: [json, xml]
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                  data:
+                    type: object
+            application/xml:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                  data:
+                    type: object
+        '500':
+          description: Erro interno do servidor
+
+  /dogs/favorites:
+    post:
+      summary: Adiciona uma imagem de cachorro aos favoritos
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                image:
+                  type: string
+      responses:
+        '201':
+          description: Imagem adicionada aos favoritos
+        '400':
+          description: Requisição inválida
+        '500':
+          description: Erro interno do servidor
+
+    get:
+      summary: Obtém todas as imagens favoritas
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: string
+        '500':
+          description: Erro interno do servidor
+
+    delete:
+      summary: Remove uma imagem dos favoritos
+      parameters:
+        - name: image
+          in: query
+          description: URL da imagem a ser removida
+          schema:
+            type: string
+      responses:
+        '204':
+          description: Imagem removida dos favoritos
+        '404':
+          description: Imagem não encontrada nos favoritos
+        '500':
+          description: Erro interno do servidor
